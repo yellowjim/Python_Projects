@@ -1,5 +1,6 @@
 # -*- coding:utf-8 -*-
 from Tkinter import *
+import tkMessageBox
 import tkFileDialog
 import os
 import re
@@ -35,18 +36,20 @@ def change_picname(old_name):
         c_guid=re.compile('[0-9a-zA-Z]{32}').search(old_name).group()
         if c_guid==guid and place_start<10:
             try:
-                pic_name=db[c_guid]+'0'+str(place_start)
+                pic_name=db[c_guid]+'0'+str(place_start)+'.jpg'
                 new_name=os.path.join(os.path.split(old_name)[0],pic_name)
                 print old_name,new_name
+                os.rename(old_name,new_name)
                 place_start += 1
             except:
                 pass
         elif c_guid != guid:
             try:
                 place_start = 1
-                pic_name=db[c_guid]+'0'+str(place_start)
+                pic_name=db[c_guid]+'0'+str(place_start)+'.jpg'
                 new_name=os.path.join(os.path.split(old_name)[0],pic_name)
                 print old_name,new_name
+                os.rename(old_name, new_name)
                 place_start+= 1
                 guid=c_guid
             except:
@@ -56,18 +59,20 @@ def change_picname(old_name):
         c_guid=re.compile('[0-9a-zA-Z]{16}').search(old_name).group()
         if c_guid==guid and landmark_start<20:
             try:
-                pic_name=db[c_guid]+str(landmark_start)
+                pic_name=db[c_guid]+str(landmark_start)+'.jpg'
                 new_name=os.path.join(os.path.split(old_name)[0],pic_name)
                 print old_name,new_name
+                os.rename(old_name, new_name)
                 landmark_start+=1
             except:
                 pass
         elif c_guid!=guid:
             try:
                 landmark_start = 11
-                pic_name=db[c_guid]+str(landmark_start)
+                pic_name=db[c_guid]+str(landmark_start)+'.jpg'
                 new_name=os.path.join(os.path.split(old_name)[0],pic_name)
                 print old_name,new_name
+                os.rename(old_name, new_name)
                 landmark_start += 1
                 guid=c_guid
             except:
@@ -86,7 +91,6 @@ def guid_mode():
     pic_path = tkFileDialog.askdirectory(parent=root, initialdir="/", title='选择【 照 片 （*.JPG） 】所在文件夹')
     while pic_path=='':
         return 0
-    print pic_path
     db_path=tkFileDialog.askdirectory(parent=root, initialdir="/", title='选择【Sqlite数据库(*.db)】文件所在文件夹')
     while db_path=='':
         return 0
@@ -96,7 +100,7 @@ def guid_mode():
     for rootdir,dirs,files in os.walk(pic_path):
         for files_name in files:
             change_picname(os.path.join(rootdir,files_name))
-
+    tkMessageBox.showinfo(title='完成', message='照片更名完毕！')
 
 def featureid_mode():
     global root
@@ -116,6 +120,7 @@ def featureid_mode():
         for files_name in files:
             change_picname(os.path.join(rootdir,files_name))
 
+
 def main():
     global root
     global pic_path
@@ -123,7 +128,7 @@ def main():
     pic_name=''
     root = Tk()
     root.geometry('480x200+720+320')
-    root.title('地名普查外业照片批量更名工具 Ver_1.0  YellowJim制作')
+    root.title('地名普查外业照片批量更名工具 Beta_0.9  YellowJim制作')
     Button(root,text = u'GUID 模式\n\n(此模式适合GUID没有发生变化时)',command=guid_mode,width = 70,height = 4,font='微软雅黑').pack()
     Button(root, text=u'FeatureID 模式\n\n(此模式适合GUID发生变化，改用FeatureID匹配)', command=featureid_mode, width=70, height=4,font='微软雅黑').pack()
     root.mainloop()
