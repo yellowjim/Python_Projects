@@ -30,7 +30,6 @@ def make_db_data(file_name):
 
 def make_landmark_db_data(file_name):
     if re.match('\d{6,}.db$',os.path.basename(file_name)):
-        print file_name
         db_conn = sqlite3.connect(file_name)
         db_cursor = db_conn.cursor()
         temp=db_cursor.execute("select f_id,f_name from tb_landmark_info").fetchall()
@@ -50,7 +49,7 @@ def change_picname(old_name):
             try:
                 pic_name=db[c_guid]+'0'+str(place_start)+'.jpg'
                 new_name=os.path.join(os.path.split(old_name)[0],pic_name)
-                print old_name,new_name
+                print old_name.split('\\')[-1]+u'  更名为  '+pic_name
                 os.rename(old_name,new_name)
                 place_start += 1
             except:
@@ -60,20 +59,19 @@ def change_picname(old_name):
                 place_start = 1
                 pic_name=db[c_guid]+'0'+str(place_start)+'.jpg'
                 new_name=os.path.join(os.path.split(old_name)[0],pic_name)
-                print old_name,new_name
+                print old_name.split('\\')[-1]+u'  更名为  '+pic_name
                 os.rename(old_name, new_name)
                 place_start+= 1
                 guid=c_guid
             except:
                 pass
-
     elif os.path.splitext(old_name)[1].lower()=='.jpg' and re.compile('[0-9a-zA-Z]{16}').search(old_name):
         c_guid=re.compile('[0-9a-zA-Z]{16}').search(old_name).group()
         if c_guid==guid and landmark_start<20:
             try:
                 pic_name=db[c_guid]+str(landmark_start)+'.jpg'
                 new_name=os.path.join(os.path.split(old_name)[0],pic_name)
-                print old_name,new_name
+                print old_name.split('\\')[-1]+u'  更名为  '+pic_name
                 os.rename(old_name, new_name)
                 landmark_start+=1
             except:
@@ -83,18 +81,12 @@ def change_picname(old_name):
                 landmark_start = 11
                 pic_name=db[c_guid]+str(landmark_start)+'.jpg'
                 new_name=os.path.join(os.path.split(old_name)[0],pic_name)
-                print old_name,new_name
+                print old_name.split('\\')[-1]+u'  更名为  '+pic_name
                 os.rename(old_name, new_name)
                 landmark_start += 1
                 guid=c_guid
             except:
                 pass
-
-def phototype(rootdir):
-    if re.compile('[0-9a-zA-Z]{32}').search(rootdir):
-        return ('place',re.compile('[0-9a-zA-Z]{32}').search(rootdir).group())
-    elif re.compile('[0-9a-zA-Z]{16}').search(rootdir) and re.compile('[0-9a-zA-Z]{32}').search(rootdir):
-        return ('landmark',re.compile('[0-9a-zA-Z]{32}').search(rootdir).group())
 
 def guid_mode():
     global root
@@ -123,7 +115,6 @@ def guid_mode():
         for rootdir,dirs,files in os.walk(pic_path):
             for files_name in files:
                 change_picname(os.path.join(rootdir,files_name))
-    print db
     tkMessageBox.showinfo(title='', message='照片更名完毕！')
 
 
