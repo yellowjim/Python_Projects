@@ -5,7 +5,6 @@ import tkFileDialog
 import os
 import re
 import sqlite3
-
 db={}
 
 def make_db_data(file_name):
@@ -22,6 +21,19 @@ def make_db_data(file_name):
         db_conn = sqlite3.connect(file_name)
         db_cursor = db_conn.cursor()
         temp=db_cursor.execute("select f_id,f_name from tb_place_info").fetchall()
+        db_conn.close()
+        for x in temp:
+            if x[1]=='':
+                continue
+            db[x[0]] = x[1]
+
+
+def make_landmark_db_data(file_name):
+    if re.match('\d{6,}.db$',os.path.basename(file_name)):
+        print file_name
+        db_conn = sqlite3.connect(file_name)
+        db_cursor = db_conn.cursor()
+        temp=db_cursor.execute("select f_id,f_name from tb_landmark_info").fetchall()
         db_conn.close()
         for x in temp:
             if x[1]=='':
@@ -94,13 +106,26 @@ def guid_mode():
     db_path=tkFileDialog.askdirectory(parent=root, initialdir="/", title='选择【Sqlite数据库(*.db)】文件所在文件夹')
     while db_path=='':
         return 0
-    for rootdir,dirs,files in os.walk(db_path):
-        for files_name in files:
-            make_db_data(os.path.join(rootdir,files_name))
-    for rootdir,dirs,files in os.walk(pic_path):
-        for files_name in files:
-            change_picname(os.path.join(rootdir,files_name))
+    if db_path==pic_path:
+        for rootdir,dirs,files in os.walk(db_path):
+            for files_name in files:
+                make_db_data(os.path.join(rootdir,files_name))
+        for rootdir,dirs,files in os.walk(pic_path):
+            for files_name in files:
+                change_picname(os.path.join(rootdir,files_name))
+    else:
+        for rootdir,dirs,files in os.walk(db_path):
+            for files_name in files:
+                make_db_data(os.path.join(rootdir,files_name))
+        for rootdir,dirs,files in os.walk(pic_path):
+            for files_name in files:
+                make_landmark_db_data(os.path.join(rootdir,files_name))
+        for rootdir,dirs,files in os.walk(pic_path):
+            for files_name in files:
+                change_picname(os.path.join(rootdir,files_name))
+    print db
     tkMessageBox.showinfo(title='', message='照片更名完毕！')
+
 
 def featureid_mode():
     global root
