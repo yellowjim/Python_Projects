@@ -157,7 +157,7 @@ def change_picname(old_name,mode):
             c_guid=re.compile('[0-9a-zA-Z]{16}').search(old_name).group()
             if c_guid==guid and landmark_start<20:
                 try:
-                    pic_name=db[db[c_guid]]+str(landmark_start)+'.jpg'
+                    pic_name=db[c_guid]+str(landmark_start)+'.jpg'
                     new_name=os.path.join(os.path.split(old_name)[0],pic_name)
                     print old_name.split('\\')[-1]+u'  更名为  '+pic_name
                     try:
@@ -170,7 +170,7 @@ def change_picname(old_name,mode):
             elif c_guid!=guid:
                 try:
                     landmark_start = 11
-                    pic_name=db[db[c_guid]]+str(landmark_start)+'.jpg'
+                    pic_name=db[c_guid]+str(landmark_start)+'.jpg'
                     new_name=os.path.join(os.path.split(old_name)[0],pic_name)
                     print old_name.split('\\')[-1]+u'  更名为  '+pic_name
                     try:
