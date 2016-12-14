@@ -100,7 +100,7 @@ def guid_mode():
     for rootdir,dirs,files in os.walk(pic_path):
         for files_name in files:
             change_picname(os.path.join(rootdir,files_name))
-    tkMessageBox.showinfo(title='完成', message='照片更名完毕！')
+    tkMessageBox.showinfo(title='', message='照片更名完毕！')
 
 def featureid_mode():
     global root
