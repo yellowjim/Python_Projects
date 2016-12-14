@@ -242,7 +242,7 @@ def main():
     pic_name=''
     root = Tk()
     root.geometry('480x200+720+320')
-    root.title('地名普查外业照片批量更名工具 Beta_0.9  YellowJim制作')
+    root.title('地名普查外业照片批量更名工具 Ver_1.0  YellowJim制作')
     Button(root,text = u'GUID 模式\n\n(此模式适合GUID没有发生变化时)',command=guid_mode,width = 70,height = 4,font='微软雅黑').pack()
     Button(root, text=u'FeatureID 模式\n\n(此模式适合GUID发生变化，改用FeatureID匹配)', command=featureid_mode, width=70, height=4,font='微软雅黑').pack()
     root.mainloop()
