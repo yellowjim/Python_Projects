@@ -225,8 +225,8 @@ def main():
     global db_path
     root = Tk()
     root.title('地名普查外业照片批量更名工具 Ver_1.0  YellowJim制作')
-    Button(root,text = u'GUID 模式\n\n(此模式适合GUID没有发生变化时)',command=guid_mode,width = 70,height = 4,font='微软雅黑').pack()
-    Button(root, text=u'FeatureID 模式\n\n(此模式适合GUID发生变化，改用FeatureID匹配)', command=featureid_mode, width=70, height=4,font='微软雅黑').pack()
+    Button(root,text = u'GUID 模式\n\n( 此模式适合GUID没有发生变化时 )',command=guid_mode,width = 70,height = 4,font='微软雅黑').pack()
+    Button(root, text=u'FeatureID 模式\n\n( 此模式适合GUID发生变化，改用FeatureID匹配 )', command=featureid_mode, width=70, height=4,font='微软雅黑').pack()
     root.update()
     scnWidth,scnHeight = root.maxsize()
     tmpcnf = '%dx%d+%d+%d'%(480,200,(scnWidth-480)/2,(scnHeight-200)/2)
