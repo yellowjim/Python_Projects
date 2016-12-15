@@ -197,7 +197,6 @@ def guid_mode():
         for rootdir,dirs,files in os.walk(pic_path):
             for files_name in files:
                 change_picname(os.path.join(rootdir,files_name),'guid')
-    print sum_place,sum_landmark,sum_place_pic,sum_landmark_pic
 
 def featureid_mode():
     global db
