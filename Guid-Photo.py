@@ -158,6 +158,7 @@ def change_picname(old_name,mode):
                 guid=c_guid
 
 def guid_mode():
+    global L_pic
     global db
     global server_db
     global pic_db
@@ -170,6 +171,7 @@ def guid_mode():
     global db_path
     sum_place,sum_landmark,sum_place_pic,sum_landmark_pic=0,0,0,0
     db,server_db,pic_db={},{},{}
+    L_pic=[]
     pic_path = tkFileDialog.askdirectory(parent=root, initialdir="/", title='选择【 照 片 （*.JPG） 】所在文件夹')
     while pic_path=='':
         return 0
@@ -180,6 +182,7 @@ def guid_mode():
         for rootdir,dirs,files in os.walk(db_path):
             for files_name in files:
                 make_db_data(os.path.join(rootdir,files_name),'guid')
+        # pic_db=db
         for rootdir,dirs,files in os.walk(pic_path):
             for files_name in files:
                 change_picname(os.path.join(rootdir,files_name),'guid')
@@ -187,6 +190,7 @@ def guid_mode():
         for rootdir,dirs,files in os.walk(pic_path):
             for files_name in files:
                 make_db_data(os.path.join(rootdir,files_name),'guid')
+        # pic_db=db
         for rootdir,dirs,files in os.walk(db_path):
             for files_name in files:
                 make_db_data(os.path.join(rootdir,files_name),'guid')
