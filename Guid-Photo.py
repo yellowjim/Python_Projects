@@ -6,6 +6,16 @@ import os
 import re
 import sqlite3
 db={}
+sum_place=0
+sum_landmark=0
+sum_place_pic=0
+sum_landmark_pic=0
+
+lace_start=1
+landmark_start=11
+guid=''
+pic_path=''
+db_path=''
 
 def make_db_data(file_name,mode):
     if mode=='guid':
@@ -18,6 +28,7 @@ def make_db_data(file_name,mode):
                 if x[0]=='':
                     continue
                 db[x[0]] = x[1]
+                sum_landmark+=1
         elif re.match(r'F\d{2}[a-zA-Z]{1}\d{6}.db$',os.path.basename(file_name)):
             db_conn = sqlite3.connect(file_name)
             db_cursor = db_conn.cursor()
@@ -54,125 +65,118 @@ def change_picname(old_name,mode):
     global guid
     global place_start
     global landmark_start
+    global sum_place
+    global sum_place_pic
+    global sum_landmark
+    global sum_landmark_pic
     if mode=='guid':
         if os.path.splitext(old_name)[1].lower()=='.jpg' and re.compile('[0-9a-zA-Z]{32}').search(old_name):
+            sum_place_pic += 1
             c_guid=re.compile('[0-9a-zA-Z]{32}').search(old_name).group()
             if c_guid==guid and place_start<10:
                 try:
                     pic_name=db[c_guid]+'0'+str(place_start)+'.jpg'
                     new_name=os.path.join(os.path.split(old_name)[0],pic_name)
                     print old_name.split('\\')[-1]+u'  更名为  '+pic_name
-                    try:
-                        os.rename(old_name,new_name)
-                    except:
-                        pass
+                    os.rename(old_name,new_name)
                     place_start += 1
                 except:
                     pass
             elif c_guid != guid:
+                sum_place+=1
                 try:
                     place_start = 1
                     pic_name=db[c_guid]+'0'+str(place_start)+'.jpg'
                     new_name=os.path.join(os.path.split(old_name)[0],pic_name)
                     print old_name.split('\\')[-1]+u'  更名为  '+pic_name
-                    try:
-                        os.rename(old_name,new_name)
-                    except:
-                        pass
+                    os.rename(old_name,new_name)
                     place_start+= 1
-                    guid=c_guid
                 except:
                     pass
-        elif os.path.splitext(old_name)[1].lower()=='.jpg' and re.compile('[0-9a-zA-Z]{16}').search(old_name):
+                guid=c_guid
+        elif os.path.splitext(old_name)[1].lower()=='.jpg' and re.compile('[0-9a-zA-Z]{16}').search(old_name) and (not re.compile('[0-9a-zA-Z]{32}').search(old_name)):
+            sum_landmark_pic+=1
             c_guid=re.compile('[0-9a-zA-Z]{16}').search(old_name).group()
             if c_guid==guid and landmark_start<20:
                 try:
                     pic_name=db[c_guid]+str(landmark_start)+'.jpg'
                     new_name=os.path.join(os.path.split(old_name)[0],pic_name)
                     print old_name.split('\\')[-1]+u'  更名为  '+pic_name
-                    try:
-                        os.rename(old_name,new_name)
-                    except:
-                        pass
+                    os.rename(old_name,new_name)
                     landmark_start+=1
                 except:
                     pass
             elif c_guid!=guid:
+                sum_landmark+=1
                 try:
                     landmark_start = 11
                     pic_name=db[c_guid]+str(landmark_start)+'.jpg'
                     new_name=os.path.join(os.path.split(old_name)[0],pic_name)
                     print old_name.split('\\')[-1]+u'  更名为  '+pic_name
-                    try:
-                        os.rename(old_name,new_name)
-                    except:
-                        pass
+                    os.rename(old_name,new_name)
                     landmark_start += 1
-                    guid=c_guid
                 except:
                     pass
+                guid=c_guid
     elif mode=='fid':
         if os.path.splitext(old_name)[1].lower()=='.jpg' and re.compile('[0-9a-zA-Z]{32}').search(old_name):
+            sum_place_pic+=1
             c_guid=re.compile('[0-9a-zA-Z]{32}').search(old_name).group()
             if c_guid==guid and place_start<10:
                 try:
                     pic_name=db[db[c_guid]]+'0'+str(place_start)+'.jpg'
                     new_name=os.path.join(os.path.split(old_name)[0],pic_name)
                     print old_name.split('\\')[-1]+u'  更名为  '+pic_name
-                    try:
-                        os.rename(old_name,new_name)
-                    except:
-                        pass
+                    os.rename(old_name,new_name)
                     place_start += 1
                 except:
                     pass
             elif c_guid != guid:
+                sum_place+=1
                 try:
                     place_start = 1
                     pic_name=db[db[c_guid]]+'0'+str(place_start)+'.jpg'
                     new_name=os.path.join(os.path.split(old_name)[0],pic_name)
                     print old_name.split('\\')[-1]+u'  更名为  '+pic_name
-                    try:
-                        os.rename(old_name,new_name)
-                    except:
-                        pass
+                    os.rename(old_name,new_name)
                     place_start+= 1
-                    guid=c_guid
                 except:
                     pass
-        elif os.path.splitext(old_name)[1].lower()=='.jpg' and re.compile('[0-9a-zA-Z]{16}').search(old_name):
+                guid=c_guid
+        elif os.path.splitext(old_name)[1].lower()=='.jpg' and re.compile('[0-9a-zA-Z]{16}').search(old_name) and (not re.compile('[0-9a-zA-Z]{32}').search(old_name)):
+            sum_landmark_pic+=1
             c_guid=re.compile('[0-9a-zA-Z]{16}').search(old_name).group()
             if c_guid==guid and landmark_start<20:
                 try:
                     pic_name=db[c_guid]+str(landmark_start)+'.jpg'
                     new_name=os.path.join(os.path.split(old_name)[0],pic_name)
                     print old_name.split('\\')[-1]+u'  更名为  '+pic_name
-                    try:
-                        os.rename(old_name,new_name)
-                    except:
-                        pass
+                    os.rename(old_name,new_name)
                     landmark_start+=1
                 except:
                     pass
             elif c_guid!=guid:
+                sum_landmark +=1
                 try:
                     landmark_start = 11
                     pic_name=db[c_guid]+str(landmark_start)+'.jpg'
                     new_name=os.path.join(os.path.split(old_name)[0],pic_name)
                     print old_name.split('\\')[-1]+u'  更名为  '+pic_name
-                    try:
-                        os.rename(old_name,new_name)
-                    except:
-                        pass
+                    os.rename(old_name,new_name)
                     landmark_start += 1
-                    guid=c_guid
                 except:
                     pass
+                guid=c_guid
 
 def guid_mode():
+    global sum_place
+    global sum_place_pic
+    global sum_landmark
+    global sum_landmark_pic
     global root
     global pic_path
     global db_path
+    sum_place,sum_landmark,sum_place_pic,sum_landmark_pic=0,0,0,0
     pic_path = tkFileDialog.askdirectory(parent=root, initialdir="/", title='选择【 照 片 （*.JPG） 】所在文件夹')
     while pic_path=='':
         return 0
@@ -196,12 +200,16 @@ def guid_mode():
         for rootdir,dirs,files in os.walk(pic_path):
             for files_name in files:
                 change_picname(os.path.join(rootdir,files_name),'guid')
-    tkMessageBox.showinfo(title='', message='照片更名完毕！')
 
 def featureid_mode():
+    global sum_place
+    global sum_place_pic
+    global sum_landmark
+    global sum_landmark_pic
     global root
     global pic_path
     global db_path
+    sum_place,sum_landmark,sum_place_pic,sum_landmark_pic=0,0,0,0
     pic_path = tkFileDialog.askdirectory(parent=root, initialdir="/", title='选择【 照 片 （*.JPG） 】所在文件夹')
     if pic_path=='':
         return 0
@@ -220,9 +228,10 @@ def featureid_mode():
     for rootdir,dirs,files in os.walk(pic_path):
         for files_name in files:
             change_picname(os.path.join(rootdir,files_name),'fid')
-    tkMessageBox.showinfo(title='', message='照片更名完毕！')
+    tkMessageBox.showinfo(title='恭喜', message='共【'+str(sum_place+sum_landmark)+'】个地名和【'+str(sum_place_pic+sum_landmark_pic)+'】张照片\n地理实体：【'+str(sum_place))+'】个，照片【'+str(sum_place_pic)+'】张\n地名标志：【'+str(sum_landmark)+'】个，照片【'+str(sum_landmark_pic)+'】张'
 
 def main():
+
     global root
     global pic_path
     global db_path
@@ -237,14 +246,14 @@ def main():
     root.mainloop()
 
 if __name__ == '__main__':
-    global guid
-    global place_start
-    global landmark_start
-    global pic_path
-    global db_path
-    place_start=1
-    landmark_start=11
-    guid=''
-    pic_path=''
-    db_path=''
+    # global guid
+    # global place_start
+    # global landmark_start
+    # global pic_path
+    # global db_path
+    # place_start=1
+    # landmark_start=11
+    # guid=''
+    # pic_path=''
+    # db_path=''
     main()
