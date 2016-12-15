@@ -5,13 +5,7 @@ import tkFileDialog
 import os
 import re
 import sqlite3
-db={}
-sum_place=0
-sum_landmark=0
-sum_place_pic=0
-sum_landmark_pic=0
-
-lace_start=1
+place_start=1
 landmark_start=11
 guid=''
 pic_path=''
@@ -24,42 +18,37 @@ def make_db_data(file_name,mode):
             db_cursor = db_conn.cursor()
             temp=db_cursor.execute("select f_id,f_name from tb_landmark_info").fetchall()
             db_conn.close()
-            for x in temp:
-                if x[0]=='':
-                    continue
-                db[x[0]] = x[1]
-                sum_landmark+=1
+            if temp:
+                for x in temp:
+                    db[x[0]] = x[1]
         elif re.match(r'F\d{2}[a-zA-Z]{1}\d{6}.db$',os.path.basename(file_name)):
             db_conn = sqlite3.connect(file_name)
             db_cursor = db_conn.cursor()
             temp=db_cursor.execute("select f_id,f_name from tb_place_info").fetchall()
             db_conn.close()
-            for x in temp:
-                if x[0]=='':
-                    continue
-                db[x[0]] = x[1]
+            if temp:
+                for x in temp:
+                    db[x[0]] = x[1]
     elif mode=='fid':
         if re.match('\d{6,}.db$',os.path.basename(file_name)):
             db_conn = sqlite3.connect(file_name)
             db_cursor = db_conn.cursor()
             temp=db_cursor.execute("select f_id,f_name from tb_landmark_info").fetchall()
             db_conn.close()
-            for x in temp:
-                if x[0]=='':
-                    continue
-                db[x[0]] = x[1]
+            if temp:
+                for x in temp:
+                    db[x[0]] = x[1]
         elif re.match(r'F\d{2}[a-zA-Z]{1}\d{6}.db$',os.path.basename(file_name)):
             db_conn = sqlite3.connect(file_name)
             db_cursor = db_conn.cursor()
             temp=db_cursor.execute("select f_id,f_idcode,f_name from tb_place_info").fetchall()
             db_conn.close()
-            for x in temp:
-                if x[0] == '' and x[1] == '':
-                    continue
-                elif x[0] != '' and x[1] == '':
-                    db[x[0]] = x[2]
-                db[x[0]] = x[1]
-                db[x[1]] = x[2]
+            if temp:
+                for x in temp:
+                    if x[1] == '':
+                        db[x[0]] = x[2]
+                    db[x[0]] = x[1]
+                    db[x[1]] = x[2]
 
 def change_picname(old_name,mode):
     global guid
@@ -169,6 +158,9 @@ def change_picname(old_name,mode):
                 guid=c_guid
 
 def guid_mode():
+    global db
+    global server_db
+    global pic_db
     global sum_place
     global sum_place_pic
     global sum_landmark
@@ -177,6 +169,7 @@ def guid_mode():
     global pic_path
     global db_path
     sum_place,sum_landmark,sum_place_pic,sum_landmark_pic=0,0,0,0
+    db,server_db,pic_db={},{},{}
     pic_path = tkFileDialog.askdirectory(parent=root, initialdir="/", title='选择【 照 片 （*.JPG） 】所在文件夹')
     while pic_path=='':
         return 0
@@ -200,8 +193,12 @@ def guid_mode():
         for rootdir,dirs,files in os.walk(pic_path):
             for files_name in files:
                 change_picname(os.path.join(rootdir,files_name),'guid')
+    print sum_place,sum_landmark,sum_place_pic,sum_landmark_pic
 
 def featureid_mode():
+    global db
+    global server_db
+    global pic_db
     global sum_place
     global sum_place_pic
     global sum_landmark
@@ -209,6 +206,7 @@ def featureid_mode():
     global root
     global pic_path
     global db_path
+    db,server_db,pic_db={},{},{}
     sum_place,sum_landmark,sum_place_pic,sum_landmark_pic=0,0,0,0
     pic_path = tkFileDialog.askdirectory(parent=root, initialdir="/", title='选择【 照 片 （*.JPG） 】所在文件夹')
     if pic_path=='':
@@ -231,7 +229,6 @@ def featureid_mode():
     tkMessageBox.showinfo(title='恭喜', message='共【'+str(sum_place+sum_landmark)+'】个地名和【'+str(sum_place_pic+sum_landmark_pic)+'】张照片\n地理实体：【'+str(sum_place))+'】个，照片【'+str(sum_place_pic)+'】张\n地名标志：【'+str(sum_landmark)+'】个，照片【'+str(sum_landmark_pic)+'】张'
 
 def main():
-
     global root
     global pic_path
     global db_path
@@ -246,14 +243,4 @@ def main():
     root.mainloop()
 
 if __name__ == '__main__':
-    # global guid
-    # global place_start
-    # global landmark_start
-    # global pic_path
-    # global db_path
-    # place_start=1
-    # landmark_start=11
-    # guid=''
-    # pic_path=''
-    # db_path=''
     main()
