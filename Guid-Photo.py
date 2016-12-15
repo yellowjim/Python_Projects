@@ -203,10 +203,13 @@ def featureid_mode():
     global pic_path
     global db_path
     pic_path = tkFileDialog.askdirectory(parent=root, initialdir="/", title='选择【 照 片 （*.JPG） 】所在文件夹')
-    while pic_path=='':
+    if pic_path=='':
         return 0
     db_path=tkFileDialog.askdirectory(parent=root, initialdir="/", title='选择从【运维平台】上下载的\n【Sqlite数据库(*.db)】文件所在文件夹')
-    while db_path=='':
+    while pic_path in db_path:
+        tkMessageBox.showinfo(title='警告', message='FeatureID模式下Sqlite数据库文件(*.db)文件\n不能放在外业照片的目录树中')
+        db_path=tkFileDialog.askdirectory(parent=root, initialdir="/", title='选择从【运维平台】上下载的\n【Sqlite数据库(*.db)】文件所在文件夹')
+    if db_path=='':
         return 0
     for rootdir,dirs,files in os.walk(pic_path):
         for files_name in files:
