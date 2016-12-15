@@ -15,7 +15,7 @@ def make_db_data(file_name,mode):
             temp=db_cursor.execute("select f_id,f_name from tb_landmark_info").fetchall()
             db_conn.close()
             for x in temp:
-                if x[1]=='':
+                if x[0]=='':
                     continue
                 db[x[0]] = x[1]
         elif re.match(r'F\d{2}[a-zA-Z]{1}\d{6}.db$',os.path.basename(file_name)):
@@ -24,7 +24,7 @@ def make_db_data(file_name,mode):
             temp=db_cursor.execute("select f_id,f_name from tb_place_info").fetchall()
             db_conn.close()
             for x in temp:
-                if x[1]=='':
+                if x[0]=='':
                     continue
                 db[x[0]] = x[1]
     elif mode=='fid':
@@ -43,8 +43,10 @@ def make_db_data(file_name,mode):
             temp=db_cursor.execute("select f_id,f_idcode,f_name from tb_place_info").fetchall()
             db_conn.close()
             for x in temp:
-                if x[0] == '' or x[1] == '':
+                if x[0] == '' and x[1] == '':
                     continue
+                elif x[0] != '' and x[1] == '':
+                    db[x[0]] = x[2]
                 db[x[0]] = x[1]
                 db[x[1]] = x[2]
 
