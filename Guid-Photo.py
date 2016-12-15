@@ -27,18 +27,16 @@ def make_db_data(file_name,mode):
                 if x[1]=='':
                     continue
                 db[x[0]] = x[1]
-
     elif mode=='fid':
         if re.match('\d{6,}.db$',os.path.basename(file_name)):
             db_conn = sqlite3.connect(file_name)
             db_cursor = db_conn.cursor()
-            temp=db_cursor.execute("select f_id,f_idcode,f_name from tb_landmark_info").fetchall()
+            temp=db_cursor.execute("select f_id,f_name from tb_landmark_info").fetchall()
             db_conn.close()
             for x in temp:
-                if x[0]=='' or x[1]=='':
+                if x[0]=='':
                     continue
                 db[x[0]] = x[1]
-                db[x[1]] = x[2]
         elif re.match(r'F\d{2}[a-zA-Z]{1}\d{6}.db$',os.path.basename(file_name)):
             db_conn = sqlite3.connect(file_name)
             db_cursor = db_conn.cursor()
@@ -49,19 +47,6 @@ def make_db_data(file_name,mode):
                     continue
                 db[x[0]] = x[1]
                 db[x[1]] = x[2]
-
-
-def make_landmark_db_data(file_name):
-    if re.match('\d{6,}.db$',os.path.basename(file_name)):
-        db_conn = sqlite3.connect(file_name)
-        db_cursor = db_conn.cursor()
-        temp=db_cursor.execute("select f_id,f_name from tb_landmark_info").fetchall()
-        db_conn.close()
-        for x in temp:
-            if x[1]=='':
-                continue
-            db[x[0]] = x[1]
-
 
 def change_picname(old_name,mode):
     global guid
@@ -200,17 +185,16 @@ def guid_mode():
             for files_name in files:
                 change_picname(os.path.join(rootdir,files_name),'guid')
     else:
+        for rootdir,dirs,files in os.walk(pic_path):
+            for files_name in files:
+                make_db_data(os.path.join(rootdir,files_name),'guid')
         for rootdir,dirs,files in os.walk(db_path):
             for files_name in files:
                 make_db_data(os.path.join(rootdir,files_name),'guid')
         for rootdir,dirs,files in os.walk(pic_path):
             for files_name in files:
-                make_landmark_db_data(os.path.join(rootdir,files_name))
-        for rootdir,dirs,files in os.walk(pic_path):
-            for files_name in files:
                 change_picname(os.path.join(rootdir,files_name),'guid')
     tkMessageBox.showinfo(title='', message='照片更名完毕！')
-
 
 def featureid_mode():
     global root
@@ -232,8 +216,6 @@ def featureid_mode():
         for files_name in files:
             change_picname(os.path.join(rootdir,files_name),'fid')
     tkMessageBox.showinfo(title='', message='照片更名完毕！')
-
-
 
 def main():
     global root
