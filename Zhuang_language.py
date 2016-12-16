@@ -16,12 +16,16 @@ import re
 # for x in db:
 #     print db[x]
 
-# p=re.compile('<p align="left" bgcolor="#EFF7FA">\s*[a-z]*\s*</p>')
-p=re.compile('\\r\\n\\t\\t[a-z]+\\t\\t',re.S)
+p=re.compile('\\r\\n\\t\\t([a-z]+)\\t\\t')
 data = {'cih': '', 'js': '那','t1':'提交'}
-f = urllib2.urlopen(
+post = urllib2.urlopen(
         url= 'http://www.jiu60.com/hoiz/sawl.asp',
         data= urllib.urlencode(data))
-temp=[]
-str1=p.findall(f.read())
-print str1
+l_word=p.findall(post.read())
+for x in l_word:
+    choose_word(x)
+
+def choose_word(word):
+    temp={}
+    temp[len(word)]=word
+
