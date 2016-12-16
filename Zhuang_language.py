@@ -16,7 +16,7 @@ def choose_word(word):
     temp_l.sort()
     return temp_dic[temp_l[0]].capitalize()
 
-ip=raw_input()
+ip=raw_input('请输入IP地址：')
 db={}
 dmpc = mysql.connector.connect(user='root', password='GwGcgx@2016!',host=ip, database='dmpc1', use_unicode=True)
 cursor = dmpc.cursor()
