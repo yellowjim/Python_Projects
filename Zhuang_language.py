@@ -876,22 +876,22 @@ def main():
     ip=raw_input("输入IP地址：")
     dmpc = mysql.connector.connect(user='root', password='GwGcgx@2016!',host=ip, database='dmpc1', use_unicode=True)
     cursor = dmpc.cursor()
-    cursor.execute("SELECT f_id,f_idcode,f_name,f_nationalname from v_xingning where f_language='壮语' and f_name like '那%'")
+    cursor.execute("SELECT f_id,f_idcode,f_name,f_nationalname from tb_place_info where f_language='壮语' and (f_region like '450102%' or f_region like '450105%')")
     data=cursor.fetchall()
     for f_id,f_idcode,f_name,f_nationalname in data:
-        db_place[f_id]=(f_idcode,f_name,f_nationalname)
-    for place in db_place:
-        for sub_word in db_place[place][1]:
-            if db_place[place][0][1]==sub_word:
+        db_place[f_id]=[f_idcode,f_name,f_nationalname]
+    for guid in db_place:
+        for i,sub_word in enumerate(db_place[guid][1]):
+            if i==0:
+                nationalname=[]
                 # db2csv(place,db_place[place][0],db_place[place][1],db_place[place][2]+query_word(sub_word,1))
-                db_place[place]=(db_place[place][0],db_place[place][1],db_place[place][2]+query_word(sub_word,1))
+                nationalname.append(query_word(sub_word, 1))
             else:
-                # db2csv(place, db_place[place][0], db_place[place][1], db_place[place][2] + query_word(sub_word, 1))
-                db_place[place] = (db_place[place][0],db_place[place][1], db_place[place][2] + query_word(sub_word, 0))
-        print place, db_place[place][0], db_place[place][1],db_place[place][2]
-        guid=place
-        shuxie=db_place[place][2]
-        cursor.execute("update v_xingning  set f_nationalname=%s where f_id=%s",(shuxie,guid))
+                # db2csv(place, db_place[place][0], db_place[place][1], db_place[place][2] + query_word(sub_word, 0))
+                nationalname.append(query_word(sub_word, 0))
+        db_place[guid][2]="".join(nationalname)
+        print guid,db_place[guid][0],db_place[guid][1],db_place[guid][2]
+        cursor.execute("UPDATE tb_place_info set f_nationalname=%s where f_id=%s",(db_place[guid][2],guid))
         dmpc.commit()
     cursor.close()
     dmpc.close()
