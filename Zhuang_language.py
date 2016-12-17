@@ -12,6 +12,8 @@ from Tkinter import *
 
 c_path=os.getcwd()+'\\'
 db_place = {}
+sum_place = 0
+p=re.compile('\\r\\n\\t\\t([a-z]+)\\t\\t')
 dic_zhuangyu={u'爱':'ai',
 u'隘':'ai',
 u'安':'an',
@@ -829,7 +831,6 @@ u'腰':'yiuj',
 u'幼':'youq',
 u'玉':'yuz',
 u'雍':'yum'}
-p=re.compile('\\r\\n\\t\\t([a-z]+)\\t\\t')
 
 # def db2csv(guid,id,name,word):
 #     with open(c_path+u'壮语地名书写.csv', 'w+') as csvfile:
@@ -869,6 +870,7 @@ def query_word(word,flag):
             return choose_word(l_word,0)
 
 def main():
+    global sum_place
     try:
         os.remove(c_path+u'壮语地名书写.csv')
     except:
@@ -876,11 +878,12 @@ def main():
     ip=raw_input("输入IP地址：")
     dmpc = mysql.connector.connect(user='root', password='GwGcgx@2016!',host=ip, database='dmpc1', use_unicode=True)
     cursor = dmpc.cursor()
-    cursor.execute("SELECT f_id,f_idcode,f_name,f_nationalname from tb_place_info where f_language='壮语' and (f_region like '450102%' or f_region like '450105%')")
+    cursor.execute("SELECT f_id,f_idcode,f_name,f_nationalname from tb_place_info where f_language='壮语' and (f_region like '450102%' or f_region like '450105%') and (f_nationalname='' or f_nationalname is null)")
     data=cursor.fetchall()
     for f_id,f_idcode,f_name,f_nationalname in data:
         db_place[f_id]=[f_idcode,f_name,f_nationalname]
-    for guid in db_place:
+        sum_place+=1
+    for n,guid in enumerate(db_place):
         for i,sub_word in enumerate(db_place[guid][1]):
             if i==0:
                 nationalname=[]
@@ -890,7 +893,7 @@ def main():
                 # db2csv(place, db_place[place][0], db_place[place][1], db_place[place][2] + query_word(sub_word, 0))
                 nationalname.append(query_word(sub_word, 0))
         db_place[guid][2]="".join(nationalname)
-        print guid,db_place[guid][0],db_place[guid][1],db_place[guid][2]
+        print '当前正在译写第【 '+str(n)+'/'+str(sum_place)+' 】个地名：',db_place[guid][1],db_place[guid][2]
         cursor.execute("UPDATE tb_place_info set f_nationalname=%s where f_id=%s",(db_place[guid][2],guid))
         dmpc.commit()
     cursor.close()
