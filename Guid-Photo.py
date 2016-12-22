@@ -197,6 +197,7 @@ def guid_mode():
         for rootdir,dirs,files in os.walk(pic_path):
             for files_name in files:
                 change_picname(os.path.join(rootdir,files_name),'guid')
+    print u'共【'+str(sum_place+sum_landmark)+u'】个地名和【'+str(sum_place_pic+sum_landmark_pic)+u'】张照片\n地理实体：【'+str(sum_place)+u'】个，照片【'+str(sum_place_pic)+u'】张\n地名标志：【'+str(sum_landmark)+u'】个，照片【'+str(sum_landmark_pic)+u'】张'
 
 def featureid_mode():
     global db
@@ -229,7 +230,7 @@ def featureid_mode():
     for rootdir,dirs,files in os.walk(pic_path):
         for files_name in files:
             change_picname(os.path.join(rootdir,files_name),'fid')
-    tkMessageBox.showinfo(title='恭喜', message='共【'+str(sum_place+sum_landmark)+'】个地名和【'+str(sum_place_pic+sum_landmark_pic)+'】张照片\n地理实体：【'+str(sum_place))+'】个，照片【'+str(sum_place_pic)+'】张\n地名标志：【'+str(sum_landmark)+'】个，照片【'+str(sum_landmark_pic)+'】张'
+    print u'共【'+str(sum_place+sum_landmark)+u'】个地名和【'+str(sum_place_pic+sum_landmark_pic)+u'】张照片\n地理实体：【'+str(sum_place)+u'】个，照片【'+str(sum_place_pic)+u'】张\n地名标志：【'+str(sum_landmark)+u'】个，照片【'+str(sum_landmark_pic)+u'】张'
 
 def main():
     global root
