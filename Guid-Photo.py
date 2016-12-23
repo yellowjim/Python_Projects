@@ -6,6 +6,10 @@ import os
 import re
 import sqlite3
 import csv, codecs, cStringIO
+import sys
+reload(sys)
+sys.setdefaultencoding('utf-8')
+
 place_start=11
 landmark_start=1
 guid=''
@@ -77,10 +81,10 @@ def output_csv():
     global output_file
     with open(output_file, "wb") as csvFile:
         csvWriter = csv.writer(csvFile)
-        csvWriter.writerow(['GUID','Compare with','PlaceName'])
+        csvWriter.writerow([u'标识码'.decode('utf-8').encode('MBCS'),u'对比数据库来源'.decode('utf-8').encode('MBCS'),u'标准名称'.decode('utf-8').encode('MBCS')])
         for x in db:
             if db[x][-1]!='exsit' and len(x)>15:
-                csvWriter.writerow([x,db[x][0].decode('utf-8').encode('MBCS'),db[x][2].encode('MBCS')])
+                csvWriter.writerow([x,db[x][0].decode('utf-8').encode('MBCS'),db[x][2].decode('utf-8').encode('MBCS')])
         csvFile.close()
 
 def make_db_data(file_name,mode,flag):
@@ -261,7 +265,7 @@ def guid_mode():
     if db_path==pic_path:
         for rootdir,dirs,files in os.walk(db_path):
             for files_name in files:
-                make_db_data(os.path.join(rootdir,files_name),'guid','对比照片文件夹的数据库')
+                make_db_data(os.path.join(rootdir,files_name),'guid','照片文件夹数据库')
         # pic_db=db
         for rootdir,dirs,files in os.walk(pic_path):
             for files_name in files:
@@ -269,10 +273,10 @@ def guid_mode():
     else:
         for rootdir,dirs,files in os.walk(pic_path):
             for files_name in files:
-                make_db_data(os.path.join(rootdir,files_name),'guid','对比照片文件夹数据库')
+                make_db_data(os.path.join(rootdir,files_name),'guid','照片文件夹数据库')
         for rootdir,dirs,files in os.walk(db_path):
             for files_name in files:
-                make_db_data(os.path.join(rootdir,files_name),'guid','对比平台数据库')
+                make_db_data(os.path.join(rootdir,files_name),'guid','平台数据库')
         for rootdir,dirs,files in os.walk(pic_path):
             for files_name in files:
                 change_picname(os.path.join(rootdir,files_name),'guid')
@@ -307,10 +311,10 @@ def featureid_mode():
         return 0
     for rootdir,dirs,files in os.walk(pic_path):
         for files_name in files:
-            make_db_data(os.path.join(rootdir,files_name),'fid','对比照片文件夹数据库')
+            make_db_data(os.path.join(rootdir,files_name),'fid','照片文件夹数据库')
     for rootdir,dirs,files in os.walk(db_path):
         for files_name in files:
-            make_db_data(os.path.join(rootdir,files_name),'fid','对比平台数据库')
+            make_db_data(os.path.join(rootdir,files_name),'fid','平台数据库')
     for rootdir,dirs,files in os.walk(pic_path):
         for files_name in files:
             change_picname(os.path.join(rootdir,files_name),'fid')
