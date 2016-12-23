@@ -79,11 +79,12 @@ def output_csv():
         csvWriter = csv.writer(csvFile)
         for x in db:
             if db[x][-1]!='exsit' and len(x)>15:
-                csvWriter.writerow([x,db[x][1].encode('MBCS'),])
+                csvWriter.writerow([x,db[x][0].encode('MBCS'),db[x][2].encode('MBCS')])
         csvFile.close()
 
-def make_db_data(file_name,mode):
+def make_db_data(file_name,mode,flag):
     global db
+    print u'======================正在初始化，请耐心等候。。。======================'
     if mode=='guid':
         if re.match('\d{6,}.db$',os.path.basename(file_name)):
             db_conn = sqlite3.connect(file_name)
@@ -92,7 +93,8 @@ def make_db_data(file_name,mode):
             db_conn.close()
             if temp:
                 for x in temp:
-                    db[x[0]] = [x[1],x[2]]
+                    db[x[0]] = [flag,x[1],x[2]]
+            print u'===================读取地名标志数据库文件完毕==================='
         elif re.match(r'F\d{2}[a-zA-Z]{1}\d{6}.db$',os.path.basename(file_name)):
             db_conn = sqlite3.connect(file_name)
             db_cursor = db_conn.cursor()
@@ -100,7 +102,8 @@ def make_db_data(file_name,mode):
             db_conn.close()
             if temp:
                 for x in temp:
-                    db[x[0]] = [x[1],x[2]]
+                    db[x[0]] = [flag,x[1],x[2]]
+            print u'=====================读取图幅数据库文件完毕====================='
     elif mode=='fid':
         if re.match('\d{6,}.db$',os.path.basename(file_name)):
             db_conn = sqlite3.connect(file_name)
@@ -109,7 +112,8 @@ def make_db_data(file_name,mode):
             db_conn.close()
             if temp:
                 for x in temp:
-                    db[x[0]] = [x[1],x[2]]
+                    db[x[0]] = [flag,x[1],x[2]]
+            print u'===================读取地名标志数据库文件完毕==================='
         elif re.match(r'F\d{2}[a-zA-Z]{1}\d{6}.db$',os.path.basename(file_name)):
             db_conn = sqlite3.connect(file_name)
             db_cursor = db_conn.cursor()
@@ -117,8 +121,9 @@ def make_db_data(file_name,mode):
             db_conn.close()
             if temp:
                 for x in temp:
-                    db[x[0]] = [x[1],x[2]]
-                    db[x[1]] = [x[0],x[2]]
+                    db[x[0]] = [flag,x[1],x[2]]
+                    db[x[1]] = [flag,x[0],x[2]]
+            print u'=====================读取图幅数据库文件完毕====================='
 
 def change_picname(old_name,mode):
     global guid
@@ -134,7 +139,7 @@ def change_picname(old_name,mode):
             c_guid=re.compile('[0-9a-zA-Z]{32}').search(old_name).group()
             if c_guid==guid and place_start<19:
                 try:
-                    pic_name=db[c_guid][1]+str(place_start)+'.jpg'
+                    pic_name=db[c_guid][2]+str(place_start)+'.jpg'
                     new_name=os.path.join(os.path.split(old_name)[0],pic_name)
                     print old_name.split('\\')[-1]+u'  更名为  '+pic_name
                     os.rename(old_name,new_name)
@@ -145,7 +150,7 @@ def change_picname(old_name,mode):
                 sum_place+=1
                 try:
                     place_start = 11
-                    pic_name=db[c_guid][1]+str(place_start)+'.jpg'
+                    pic_name=db[c_guid][2]+str(place_start)+'.jpg'
                     new_name=os.path.join(os.path.split(old_name)[0],pic_name)
                     print old_name.split('\\')[-1]+u'  更名为  '+pic_name
                     os.rename(old_name,new_name)
@@ -159,7 +164,7 @@ def change_picname(old_name,mode):
             c_guid=re.compile('[0-9a-zA-Z]{16}').search(old_name).group()
             if c_guid==guid and landmark_start<9:
                 try:
-                    pic_name=db[c_guid][1]+'0'+str(landmark_start)+'.jpg'
+                    pic_name=db[c_guid][2]+'0'+str(landmark_start)+'.jpg'
                     new_name=os.path.join(os.path.split(old_name)[0],pic_name)
                     print old_name.split('\\')[-1]+u'  更名为  '+pic_name
                     os.rename(old_name,new_name)
@@ -170,7 +175,7 @@ def change_picname(old_name,mode):
                 sum_landmark+=1
                 try:
                     landmark_start = 1
-                    pic_name=db[c_guid][1]+'0'+str(landmark_start)+'.jpg'
+                    pic_name=db[c_guid][2]+'0'+str(landmark_start)+'.jpg'
                     new_name=os.path.join(os.path.split(old_name)[0],pic_name)
                     print old_name.split('\\')[-1]+u'  更名为  '+pic_name
                     os.rename(old_name,new_name)
@@ -185,7 +190,7 @@ def change_picname(old_name,mode):
             c_guid=re.compile('[0-9a-zA-Z]{32}').search(old_name).group()
             if c_guid==guid and place_start<19:
                 try:
-                    pic_name=db[db[c_guid][0]][1]+str(place_start)+'.jpg'
+                    pic_name=db[db[c_guid][0]][2]+str(place_start)+'.jpg'
                     new_name=os.path.join(os.path.split(old_name)[0],pic_name)
                     print old_name.split('\\')[-1]+u'  更名为  '+pic_name
                     os.rename(old_name,new_name)
@@ -196,7 +201,7 @@ def change_picname(old_name,mode):
                 sum_place+=1
                 try:
                     place_start = 11
-                    pic_name=db[db[c_guid][0]][1]+str(place_start)+'.jpg'
+                    pic_name=db[db[c_guid][0]][2]+str(place_start)+'.jpg'
                     new_name=os.path.join(os.path.split(old_name)[0],pic_name)
                     print old_name.split('\\')[-1]+u'  更名为  '+pic_name
                     os.rename(old_name,new_name)
@@ -210,7 +215,7 @@ def change_picname(old_name,mode):
             c_guid=re.compile('[0-9a-zA-Z]{16}').search(old_name).group()
             if c_guid==guid and landmark_start<9:
                 try:
-                    pic_name=db[c_guid[0]][1]+'0'+str(landmark_start)+'.jpg'
+                    pic_name=db[c_guid[0]][2]+'0'+str(landmark_start)+'.jpg'
                     new_name=os.path.join(os.path.split(old_name)[0],pic_name)
                     print old_name.split('\\')[-1]+u'  更名为  '+pic_name
                     os.rename(old_name,new_name)
@@ -221,7 +226,7 @@ def change_picname(old_name,mode):
                 sum_landmark +=1
                 try:
                     landmark_start = 1
-                    pic_name=db[c_guid[0]][1]+'0'+str(landmark_start)+'.jpg'
+                    pic_name=db[c_guid[0]][2]+'0'+str(landmark_start)+'.jpg'
                     new_name=os.path.join(os.path.split(old_name)[0],pic_name)
                     print old_name.split('\\')[-1]+u'  更名为  '+pic_name
                     os.rename(old_name,new_name)
@@ -259,7 +264,7 @@ def guid_mode():
     if db_path==pic_path:
         for rootdir,dirs,files in os.walk(db_path):
             for files_name in files:
-                make_db_data(os.path.join(rootdir,files_name),'guid')
+                make_db_data(os.path.join(rootdir,files_name),'guid','pic')
         # pic_db=db
         for rootdir,dirs,files in os.walk(pic_path):
             for files_name in files:
@@ -267,11 +272,11 @@ def guid_mode():
     else:
         for rootdir,dirs,files in os.walk(pic_path):
             for files_name in files:
-                make_db_data(os.path.join(rootdir,files_name),'guid')
+                make_db_data(os.path.join(rootdir,files_name),'guid','pic')
         # pic_db=db
         for rootdir,dirs,files in os.walk(db_path):
             for files_name in files:
-                make_db_data(os.path.join(rootdir,files_name),'guid')
+                make_db_data(os.path.join(rootdir,files_name),'guid','db')
         for rootdir,dirs,files in os.walk(pic_path):
             for files_name in files:
                 change_picname(os.path.join(rootdir,files_name),'guid')
