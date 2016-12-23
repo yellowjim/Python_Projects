@@ -254,7 +254,7 @@ def guid_mode():
     db_path=tkFileDialog.askdirectory(parent=root, initialdir="/", title='选择【Sqlite数据库(*.db)】文件所在文件夹')
     while db_path=='':
         return 0
-    output_file = tkFileDialog.asksaveasfilename(filetypes=[('CSV file', '.csv'), ('All files', '*')], title='请选择统计结果存放位置',defaultextension='.csv')
+    output_file = tkFileDialog.asksaveasfilename(filetypes=[('CSV file', '.csv'), ('All files', '*')], title='请选择统计结果存放位置\n注:若无漏拍照片则表格为空',defaultextension='.csv')
     if output_file=='':
         return 0
     if db_path==pic_path:
@@ -301,7 +301,7 @@ def featureid_mode():
         db_path=tkFileDialog.askdirectory(parent=root, initialdir="/", title='选择从【运维平台】上下载的\n【Sqlite数据库(*.db)】文件所在文件夹')
     if db_path=='':
         return 0
-    output_file = tkFileDialog.asksaveasfilename(filetypes=[('CSV file', '.prj'), ('All files', '*')], title='请选择统计结果存放位置',defaultextension='.csv')
+    output_file = tkFileDialog.asksaveasfilename(filetypes=[('CSV file', '.prj'), ('All files', '*')], title='请选择统计结果存放位置\n注:若无漏拍照片则表格为空',defaultextension='.csv')
     if output_file=='':
         return 0
     for rootdir,dirs,files in os.walk(pic_path):
