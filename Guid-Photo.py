@@ -81,10 +81,10 @@ def output_csv():
     global output_file
     with open(output_file, "wb") as csvFile:
         csvWriter = csv.writer(csvFile)
-        csvWriter.writerow([u'标识码'.decode('utf-8').encode('MBCS'),u'对比数据库来源'.decode('utf-8').encode('MBCS'),u'标准名称'.decode('utf-8').encode('MBCS')])
+        csvWriter.writerow([u'标识码'.decode('utf-8').encode('MBCS'),u'对比数据库来源'.decode('utf-8').encode('MBCS'),u'标准名称'.decode('utf-8').encode('MBCS'),u'地名大类代码'.decode('utf-8').encode('MBCS'),u'地名中类代码'.decode('utf-8').encode('MBCS')])
         for x in db:
             if db[x][-1]!='exsit' and len(x)>15:
-                csvWriter.writerow([x,db[x][0].decode('utf-8').encode('MBCS'),db[x][2].decode('utf-8').encode('MBCS')])
+                csvWriter.writerow([x,db[x][0].decode('utf-8').encode('MBCS'),db[x][2].decode('utf-8').encode('MBCS'),db[x][3],db[x][4]])
         csvFile.close()
 
 def make_db_data(file_name,mode,flag):
@@ -94,37 +94,37 @@ def make_db_data(file_name,mode,flag):
         if re.match('\d{6,}.db$',os.path.basename(file_name)):
             db_conn = sqlite3.connect(file_name)
             db_cursor = db_conn.cursor()
-            temp=db_cursor.execute("select f_id,f_idcode,f_name from tb_landmark_info").fetchall()
+            temp=db_cursor.execute("select f_id,f_idcode,f_name from tb_landmark_info order by f_placetype").fetchall()
             db_conn.close()
             if temp:
                 for x in temp:
-                    db[x[0]] = [flag,x[1],x[2]]
+                    db[x[0]] = [flag,x[1],x[2],'0','0']
         elif re.match(r'F\d{2}[a-zA-Z]{1}\d{6}.db$',os.path.basename(file_name)):
             db_conn = sqlite3.connect(file_name)
             db_cursor = db_conn.cursor()
-            temp=db_cursor.execute("select f_id,f_idcode,f_name from tb_place_info").fetchall()
+            temp=db_cursor.execute("select f_id,f_idcode,f_name,f_firsttype,f_secondtype from tb_place_info order by f_firsttype,f_secondtype").fetchall()
             db_conn.close()
             if temp:
                 for x in temp:
-                    db[x[0]] = [flag,x[1],x[2]]
+                    db[x[0]] = [flag,x[1],x[2],x[3],x[4]]
     elif mode=='fid':
         if re.match('\d{6,}.db$',os.path.basename(file_name)):
             db_conn = sqlite3.connect(file_name)
             db_cursor = db_conn.cursor()
-            temp=db_cursor.execute("select f_id,f_idcode,f_name from tb_landmark_info").fetchall()
+            temp=db_cursor.execute("select f_id,f_idcode,f_name from tb_landmark_info order by f_placetype").fetchall()
             db_conn.close()
             if temp:
                 for x in temp:
-                    db[x[0]] = [flag,x[1],x[2]]
+                    db[x[0]] = [flag,x[1],x[2],'0','0']
         elif re.match(r'F\d{2}[a-zA-Z]{1}\d{6}.db$',os.path.basename(file_name)):
             db_conn = sqlite3.connect(file_name)
             db_cursor = db_conn.cursor()
-            temp=db_cursor.execute("select f_id,f_idcode,f_name from tb_place_info").fetchall()
+            temp=db_cursor.execute("select f_id,f_idcode,f_name,f_firsttype,f_secondtype from tb_place_info order by f_firsttype,f_secondtype").fetchall()
             db_conn.close()
             if temp:
                 for x in temp:
-                    db[x[0]] = [flag,x[1],x[2]]
-                    db[x[1]] = [flag,x[0],x[2]]
+                    db[x[0]] = [flag,x[1],x[2],x[3],x[4]]
+                    db[x[1]] = [flag,x[0],x[2],x[3],x[4]]
 
 def change_picname(old_name,mode):
     global guid
@@ -266,7 +266,6 @@ def guid_mode():
         for rootdir,dirs,files in os.walk(db_path):
             for files_name in files:
                 make_db_data(os.path.join(rootdir,files_name),'guid','照片文件夹数据库')
-        # pic_db=db
         for rootdir,dirs,files in os.walk(pic_path):
             for files_name in files:
                 change_picname(os.path.join(rootdir,files_name),'guid')
