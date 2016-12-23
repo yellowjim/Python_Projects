@@ -275,7 +275,7 @@ def guid_mode():
         for rootdir,dirs,files in os.walk(pic_path):
             for files_name in files:
                 change_picname(os.path.join(rootdir,files_name),'guid')
-    print u'共【'+str(sum_place+sum_landmark)+u'】个地名和【'+str(sum_place_pic+sum_landmark_pic)+u'】张照片\n地理实体：【'+str(sum_place)+u'】个，照片【'+str(sum_place_pic)+u'】张\n地名标志：【'+str(sum_landmark)+u'】个，照片【'+str(sum_landmark_pic)+u'】张'
+    print u'共【 '+str(sum_place+sum_landmark)+u' 】个地名和【 '+str(sum_place_pic+sum_landmark_pic)+u' 】张照片\n地理实体：【 '+str(sum_place)+u' 】个，照片【 '+str(sum_place_pic)+u' 】张\n地名标志：【 '+str(sum_landmark)+u' 】个，照片【 '+str(sum_landmark_pic)+u' 】张'
     output_csv()
 
 def featureid_mode():
@@ -313,7 +313,7 @@ def featureid_mode():
     for rootdir,dirs,files in os.walk(pic_path):
         for files_name in files:
             change_picname(os.path.join(rootdir,files_name),'fid')
-    print u'共【'+str(sum_place+sum_landmark)+u'】个地名和【'+str(sum_place_pic+sum_landmark_pic)+u'】张照片\n地理实体：【'+str(sum_place)+u'】个，照片【'+str(sum_place_pic)+u'】张\n地名标志：【'+str(sum_landmark)+u'】个，照片【'+str(sum_landmark_pic)+u'】张'
+    print u'共【 '+str(sum_place+sum_landmark)+u' 】个地名和【 '+str(sum_place_pic+sum_landmark_pic)+u' 】张照片\n地理实体：【 '+str(sum_place)+u' 】个，照片【 '+str(sum_place_pic)+u' 】张\n地名标志：【 '+str(sum_landmark)+u' 】个，照片【 '+str(sum_landmark_pic)+u' 】张'
     output_csv()
 
 def main():
