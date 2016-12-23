@@ -5,8 +5,8 @@ import tkFileDialog
 import os
 import re
 import sqlite3
-place_start=1
-landmark_start=11
+place_start=11
+landmark_start=1
 guid=''
 pic_path=''
 db_path=''
@@ -62,9 +62,9 @@ def change_picname(old_name,mode):
         if os.path.splitext(old_name)[1].lower()=='.jpg' and re.compile('[0-9a-zA-Z]{32}').search(old_name):
             sum_place_pic += 1
             c_guid=re.compile('[0-9a-zA-Z]{32}').search(old_name).group()
-            if c_guid==guid and place_start<10:
+            if c_guid==guid and place_start<19:
                 try:
-                    pic_name=db[c_guid]+'0'+str(place_start)+'.jpg'
+                    pic_name=db[c_guid]+str(place_start)+'.jpg'
                     new_name=os.path.join(os.path.split(old_name)[0],pic_name)
                     print old_name.split('\\')[-1]+u'  更名为  '+pic_name
                     os.rename(old_name,new_name)
@@ -74,8 +74,8 @@ def change_picname(old_name,mode):
             elif c_guid != guid:
                 sum_place+=1
                 try:
-                    place_start = 1
-                    pic_name=db[c_guid]+'0'+str(place_start)+'.jpg'
+                    place_start = 11
+                    pic_name=db[c_guid]+str(place_start)+'.jpg'
                     new_name=os.path.join(os.path.split(old_name)[0],pic_name)
                     print old_name.split('\\')[-1]+u'  更名为  '+pic_name
                     os.rename(old_name,new_name)
@@ -86,9 +86,9 @@ def change_picname(old_name,mode):
         elif os.path.splitext(old_name)[1].lower()=='.jpg' and re.compile('[0-9a-zA-Z]{16}').search(old_name) and (not re.compile('[0-9a-zA-Z]{32}').search(old_name)):
             sum_landmark_pic+=1
             c_guid=re.compile('[0-9a-zA-Z]{16}').search(old_name).group()
-            if c_guid==guid and landmark_start<20:
+            if c_guid==guid and landmark_start<9:
                 try:
-                    pic_name=db[c_guid]+str(landmark_start)+'.jpg'
+                    pic_name=db[c_guid]+'0'+str(landmark_start)+'.jpg'
                     new_name=os.path.join(os.path.split(old_name)[0],pic_name)
                     print old_name.split('\\')[-1]+u'  更名为  '+pic_name
                     os.rename(old_name,new_name)
@@ -98,8 +98,8 @@ def change_picname(old_name,mode):
             elif c_guid!=guid:
                 sum_landmark+=1
                 try:
-                    landmark_start = 11
-                    pic_name=db[c_guid]+str(landmark_start)+'.jpg'
+                    landmark_start = 1
+                    pic_name=db[c_guid]+'0'+str(landmark_start)+'.jpg'
                     new_name=os.path.join(os.path.split(old_name)[0],pic_name)
                     print old_name.split('\\')[-1]+u'  更名为  '+pic_name
                     os.rename(old_name,new_name)
@@ -111,9 +111,9 @@ def change_picname(old_name,mode):
         if os.path.splitext(old_name)[1].lower()=='.jpg' and re.compile('[0-9a-zA-Z]{32}').search(old_name):
             sum_place_pic+=1
             c_guid=re.compile('[0-9a-zA-Z]{32}').search(old_name).group()
-            if c_guid==guid and place_start<10:
+            if c_guid==guid and place_start<19:
                 try:
-                    pic_name=db[db[c_guid]]+'0'+str(place_start)+'.jpg'
+                    pic_name=db[db[c_guid]]+str(place_start)+'.jpg'
                     new_name=os.path.join(os.path.split(old_name)[0],pic_name)
                     print old_name.split('\\')[-1]+u'  更名为  '+pic_name
                     os.rename(old_name,new_name)
@@ -123,8 +123,8 @@ def change_picname(old_name,mode):
             elif c_guid != guid:
                 sum_place+=1
                 try:
-                    place_start = 1
-                    pic_name=db[db[c_guid]]+'0'+str(place_start)+'.jpg'
+                    place_start = 11
+                    pic_name=db[db[c_guid]]+str(place_start)+'.jpg'
                     new_name=os.path.join(os.path.split(old_name)[0],pic_name)
                     print old_name.split('\\')[-1]+u'  更名为  '+pic_name
                     os.rename(old_name,new_name)
@@ -135,9 +135,9 @@ def change_picname(old_name,mode):
         elif os.path.splitext(old_name)[1].lower()=='.jpg' and re.compile('[0-9a-zA-Z]{16}').search(old_name) and (not re.compile('[0-9a-zA-Z]{32}').search(old_name)):
             sum_landmark_pic+=1
             c_guid=re.compile('[0-9a-zA-Z]{16}').search(old_name).group()
-            if c_guid==guid and landmark_start<20:
+            if c_guid==guid and landmark_start<9:
                 try:
-                    pic_name=db[c_guid]+str(landmark_start)+'.jpg'
+                    pic_name=db[c_guid]+'0'+str(landmark_start)+'.jpg'
                     new_name=os.path.join(os.path.split(old_name)[0],pic_name)
                     print old_name.split('\\')[-1]+u'  更名为  '+pic_name
                     os.rename(old_name,new_name)
@@ -147,8 +147,8 @@ def change_picname(old_name,mode):
             elif c_guid!=guid:
                 sum_landmark +=1
                 try:
-                    landmark_start = 11
-                    pic_name=db[c_guid]+str(landmark_start)+'.jpg'
+                    landmark_start = 1
+                    pic_name=db[c_guid]+'0'+str(landmark_start)+'.jpg'
                     new_name=os.path.join(os.path.split(old_name)[0],pic_name)
                     print old_name.split('\\')[-1]+u'  更名为  '+pic_name
                     os.rename(old_name,new_name)
@@ -237,7 +237,7 @@ def main():
     global pic_path
     global db_path
     root = Tk()
-    root.title('地名普查外业照片批量更名工具 Ver_1.0  YellowJim制作')
+    root.title('地名普查外业照片批量更名工具 Ver_1.1  YellowJim制作')
     Button(root,text = u'GUID 模式\n\n( 此模式适合GUID没有发生变化时 )',command=guid_mode,width = 70,height = 4,font='微软雅黑').pack()
     Button(root, text=u'FeatureID 模式\n\n( 此模式适合GUID发生变化，改用FeatureID匹配 )', command=featureid_mode, width=70, height=4,font='微软雅黑').pack()
     root.update()
