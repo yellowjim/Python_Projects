@@ -77,6 +77,7 @@ def output_csv():
     global output_file
     with open(output_file, "wb") as csvFile:
         csvWriter = csv.writer(csvFile)
+        csvWriter.writerow(['GUID','Compare with','PlaceName'])
         for x in db:
             if db[x][-1]!='exsit' and len(x)>15:
                 csvWriter.writerow([x,db[x][0].decode('utf-8').encode('MBCS'),db[x][2].encode('MBCS')])
