@@ -14,7 +14,6 @@ db_path=''
 db={}
 output_file=''
 
-
 class UTF8Recoder:
     """
     Iterator that reads an encoded stream and reencodes the input to UTF-8
