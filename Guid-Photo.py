@@ -82,10 +82,12 @@ def output_csv():
     global output_file
     with open(output_file, "wb") as csvFile:
         csvWriter = csv.writer(csvFile)
-        csvWriter.writerow([u'标识码'.decode('utf-8').encode('MBCS'),u'对比数据库来源'.decode('utf-8').encode('MBCS'),u'标准名称'.decode('utf-8').encode('MBCS'),u'地名大类代码'.decode('utf-8').encode('MBCS'),u'地名中类代码'.decode('utf-8').encode('MBCS')])
+        csvWriter.writerow([u'是否拍照'.decode('utf-8').encode('MBCS'),u'类型'.decode('utf-8').encode('MBCS'),u'标识码'.decode('utf-8').encode('MBCS'),u'对比数据库来源'.decode('utf-8').encode('MBCS'),u'标准名称'.decode('utf-8').encode('MBCS'),u'地名大类代码'.decode('utf-8').encode('MBCS'),u'地名中类代码'.decode('utf-8').encode('MBCS'),u'经度'.decode('utf-8').encode('MBCS'),u'纬度'.decode('utf-8').encode('MBCS')])
         for x in db:
-            if db[x][-1]!='exsit' and len(x)>15:
-                csvWriter.writerow([x,db[x][0].decode('utf-8').encode('MBCS'),db[x][2].decode('utf-8').encode('MBCS'),db[x][3],db[x][4]])
+            if len(x)==16:
+                csvWriter.writerow([db[x][-1].decode('utf-8').encode('MBCS'),u'地名标志'.decode('utf-8').encode('MBCS'),x,db[x][0].decode('utf-8').encode('MBCS'),db[x][2].decode('utf-8').encode('MBCS'),db[x][3],db[x][4],db[x][5],db[x][6]])
+            if len(x)==32:
+                csvWriter.writerow([db[x][-1].decode('utf-8').encode('MBCS'),u'地理实体'.decode('utf-8').encode('MBCS'),x,db[x][0].decode('utf-8').encode('MBCS'),db[x][2].decode('utf-8').encode('MBCS'),db[x][3],db[x][4],db[x][5],db[x][6]])
         csvFile.close()
 
 def make_db_data(file_name,mode,flag):
@@ -95,36 +97,36 @@ def make_db_data(file_name,mode,flag):
         if re.match('\d{6,}.db$',os.path.basename(file_name)):
             db_conn = sqlite3.connect(file_name)
             db_cursor = db_conn.cursor()
-            temp=db_cursor.execute("select f_id,f_idcode,f_name from tb_landmark_info order by f_placetype").fetchall()
+            temp=db_cursor.execute("select f_id,f_idcode,f_name,f_lon,f_lat from tb_landmark_info order by f_placetype").fetchall()
             if temp:
                 for x in temp:
-                    db.update({x[0]:[flag,x[1],x[2],'','']})
+                    db.update({x[0]:[flag,x[1],x[2],'','',x[3],x[4],u'漏拍']})
             db_conn.close()
         elif re.match(r'F\d{2}[a-zA-Z]{1}\d{6}.db$',os.path.basename(file_name)):
             db_conn = sqlite3.connect(file_name)
             db_cursor = db_conn.cursor()
-            temp=db_cursor.execute("select f_id,f_idcode,f_name,f_firsttype,f_secondtype from tb_place_info order by f_firsttype,f_secondtype").fetchall()
+            temp=db_cursor.execute("select f_id,f_idcode,f_name,f_firsttype,f_secondtype,f_lon,f_lat from tb_place_info order by f_firsttype,f_secondtype").fetchall()
             if temp:
                 for x in temp:
-                    db.update({x[0]:[flag,x[1],x[2],x[3],x[4]]})
+                    db.update({x[0]:[flag,x[1],x[2],x[3],x[4],x[5],x[6],u'漏拍']})
             db_conn.close()
     elif mode=='fid':
         if re.match('\d{6,}.db$',os.path.basename(file_name)):
             db_conn = sqlite3.connect(file_name)
             db_cursor = db_conn.cursor()
-            temp=db_cursor.execute("select f_id,f_idcode,f_name from tb_landmark_info order by f_placetype").fetchall()
+            temp=db_cursor.execute("select f_id,f_idcode,f_name,f_lon,f_lat from tb_landmark_info order by f_placetype").fetchall()
             if temp:
                 for x in temp:
-                    db.update({x[0]:[flag,x[1],x[2],'','']})
+                    db.update({x[0]:[flag,x[1],x[2],'','',x[3],x[4],u'漏拍']})
             db_conn.close()
         elif re.match(r'F\d{2}[a-zA-Z]{1}\d{6}.db$',os.path.basename(file_name)):
             db_conn = sqlite3.connect(file_name)
             db_cursor = db_conn.cursor()
-            temp=db_cursor.execute("select f_id,f_idcode,f_name,f_firsttype,f_secondtype from tb_place_info order by f_firsttype,f_secondtype").fetchall()
+            temp=db_cursor.execute("select f_id,f_idcode,f_name,f_firsttype,f_secondtype,f_lon,f_lat from tb_place_info order by f_firsttype,f_secondtype").fetchall()
             if temp:
                 for x in temp:
-                    db.update({x[0]:[flag,x[1],x[2],x[3],x[4]]})
-                    db.update({x[1]:[flag,x[0],x[2],x[3],x[4]]})
+                    db.update({x[0]:[flag,x[1],x[2],x[3],x[4],x[5],x[6],u'漏拍']})
+                    db.update({x[1]:[flag,x[0],x[2],x[3],x[4],x[5],x[6],u'漏拍']})
             db_conn.close()
 
 def change_picname(old_name,mode):
@@ -157,7 +159,7 @@ def change_picname(old_name,mode):
                     print old_name.split('\\')[-1]+u'  更名为  '+pic_name
                     os.rename(old_name,new_name)
                     place_start+= 1
-                    db[c_guid].append('exsit')
+                    db[c_guid][-1]=u'有照片'
                 except:
                     pass
                 guid=c_guid
@@ -182,7 +184,7 @@ def change_picname(old_name,mode):
                     print old_name.split('\\')[-1]+u'  更名为  '+pic_name
                     os.rename(old_name,new_name)
                     landmark_start += 1
-                    db[c_guid].append('exsit')
+                    db[c_guid][-1]=u'有照片'
                 except:
                     pass
                 guid=c_guid
@@ -208,7 +210,7 @@ def change_picname(old_name,mode):
                     print old_name.split('\\')[-1]+u'  更名为  '+pic_name
                     os.rename(old_name,new_name)
                     place_start+= 1
-                    db[c_guid].append('exsit')
+                    db[c_guid][-1]=u'有照片'
                 except:
                     pass
                 guid=c_guid
@@ -233,7 +235,7 @@ def change_picname(old_name,mode):
                     print old_name.split('\\')[-1]+u'  更名为  '+pic_name
                     os.rename(old_name,new_name)
                     landmark_start += 1
-                    db[c_guid].append('exsit')
+                    db[c_guid][-1]=u'有照片'
                 except:
                     pass
                 guid=c_guid
