@@ -89,7 +89,7 @@ def output_csv():
             if len(x)==32:
                 csvWriter.writerow([db[x][-1].decode('utf-8').encode('MBCS'),u'地理实体'.decode('utf-8').encode('MBCS'),x,db[x][0].decode('utf-8').encode('MBCS'),db[x][2].decode('utf-8').encode('MBCS'),db[x][3],db[x][4],db[x][5],db[x][6]])
         csvFile.close()
-        os.system(output_file)
+        os.system(output_file.decode('utf-8').encode('MBCS'))
 
 def make_db_data(file_name,mode,flag):
     global db
