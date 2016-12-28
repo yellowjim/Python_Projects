@@ -860,7 +860,7 @@ def query_word(word,flag):
     else:
         js=word.encode('utf-8')
         post_data = {'cih': '', 'js': js, 't1': '提交'}
-        while post:
+        while 1:
             try:
                 post = urllib2.urlopen(url= 'http://www.jiu60.com/hoiz/sawl.asp',data= urllib.urlencode(post_data))
                 break
