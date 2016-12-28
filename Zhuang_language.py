@@ -860,7 +860,12 @@ def query_word(word,flag):
     else:
         js=word.encode('utf-8')
         post_data = {'cih': '', 'js': js, 't1': '提交'}
-        post = urllib2.urlopen(url= 'http://www.jiu60.com/hoiz/sawl.asp',data= urllib.urlencode(post_data))
+        while post:
+            try:
+                post = urllib2.urlopen(url= 'http://www.jiu60.com/hoiz/sawl.asp',data= urllib.urlencode(post_data))
+                break
+            except:
+                pass
         l_word=p.findall(post.read())
         if l_word==[]:
             return ''
@@ -878,8 +883,7 @@ def main():
     ip=raw_input("输入IP地址：")
     dmpc = mysql.connector.connect(user='root', password='GwGcgx@2016!',host=ip, database='dmpc1', use_unicode=True)
     cursor = dmpc.cursor()
-    # cursor.execute("SELECT f_id,f_idcode,f_name,f_nationalname from tb_place_info where f_language='壮语' and (f_region like '450102%' or f_region like '450105%') and (f_nationalname='' or f_nationalname is null)")
-    cursor.execute("SELECT f_id,f_idcode,f_name,f_nationalname from v_xingning where f_language='壮语'")
+    cursor.execute("SELECT f_id,f_idcode,f_name,f_nationalname from tb_place_info where f_region like '450125%' and f_language='壮语'")
     data=cursor.fetchall()
     for f_id,f_idcode,f_name,f_nationalname in data:
         db_place[f_id]=[f_idcode,f_name,f_nationalname]
