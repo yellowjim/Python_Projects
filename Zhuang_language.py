@@ -865,6 +865,7 @@ def query_word(word,flag):
                 post = urllib2.urlopen(url= 'http://www.jiu60.com/hoiz/sawl.asp',data= urllib.urlencode(post_data))
                 break
             except:
+                print u'【 '+js+u' 】'+u'字查询异常，正在重新查询！'
                 pass
         l_word=p.findall(post.read())
         if l_word==[]:
