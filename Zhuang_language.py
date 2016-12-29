@@ -899,7 +899,7 @@ def main():
                 # db2csv(place, db_place[place][0], db_place[place][1], db_place[place][2] + query_word(sub_word, 0))
                 nationalname.append(query_word(sub_word, 0))
         db_place[guid][2]="".join(nationalname)
-        print '当前正在译写第【 '+str(n)+'/'+str(sum_place)+' 】个地名：',db_place[guid][1],db_place[guid][2]
+        print '当前正在译写第【 '+str(n+1)+'/'+str(sum_place)+' 】个地名：',db_place[guid][1],db_place[guid][2]
         cursor.execute("UPDATE tb_place_info set f_nationalname=%s where f_id=%s",(db_place[guid][2],guid))
         dmpc.commit()
     cursor.close()
