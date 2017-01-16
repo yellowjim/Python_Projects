@@ -12,11 +12,14 @@ sys.setdefaultencoding('utf-8')
 
 place_start=11
 landmark_start=1
+video_start=31
+sum_place_video=0
 guid=''
 pic_path=''
 db_path=''
 db={}
 output_file=''
+
 
 class UTF8Recoder:
     """
@@ -82,7 +85,7 @@ def output_csv():
     global output_file
     with open(output_file, "wb") as csvFile:
         csvWriter = csv.writer(csvFile)
-        csvWriter.writerow([u'是否拍照'.decode('utf-8').encode('MBCS'),u'类型'.decode('utf-8').encode('MBCS'),u'标识码'.decode('utf-8').encode('MBCS'),u'对比数据库来源'.decode('utf-8').encode('MBCS'),u'标准名称'.decode('utf-8').encode('MBCS'),u'地名大类代码'.decode('utf-8').encode('MBCS'),u'地名中类代码'.decode('utf-8').encode('MBCS'),u'经度'.decode('utf-8').encode('MBCS'),u'纬度'.decode('utf-8').encode('MBCS')])
+        csvWriter.writerow([u'是否拍摄'.decode('utf-8').encode('MBCS'),u'类型'.decode('utf-8').encode('MBCS'),u'标识码'.decode('utf-8').encode('MBCS'),u'对比数据库来源'.decode('utf-8').encode('MBCS'),u'标准名称'.decode('utf-8').encode('MBCS'),u'地名大类代码'.decode('utf-8').encode('MBCS'),u'地名中类代码'.decode('utf-8').encode('MBCS'),u'经度'.decode('utf-8').encode('MBCS'),u'纬度'.decode('utf-8').encode('MBCS')])
         for x in db:
             if len(x)==16:
                 csvWriter.writerow([db[x][-1].decode('utf-8').encode('MBCS'),u'地名标志'.decode('utf-8').encode('MBCS'),x,db[x][0].decode('utf-8').encode('MBCS'),db[x][2].decode('utf-8').encode('MBCS'),db[x][3],db[x][4],db[x][5],db[x][6]])
@@ -130,12 +133,14 @@ def make_db_data(file_name,mode,flag):
                     db.update({x[1]:[flag,x[0],x[2],x[3],x[4],x[5],x[6],u'漏拍']})
             db_conn.close()
 
-def change_picname(old_name,mode):
+def change_filename(old_name,mode):
     global guid
     global place_start
     global landmark_start
+    global video_start
     global sum_place
     global sum_place_pic
+    global sum_place_video
     global sum_landmark
     global sum_landmark_pic
     if mode=='guid':
@@ -155,6 +160,7 @@ def change_picname(old_name,mode):
                 sum_place+=1
                 try:
                     place_start = 11
+                    video_start=31
                     pic_name=db[c_guid][2]+str(place_start)+'.jpg'
                     new_name=os.path.join(os.path.split(old_name)[0],pic_name)
                     print old_name.split('\\')[-1]+u'  更名为  '+pic_name
@@ -186,6 +192,31 @@ def change_picname(old_name,mode):
                     os.rename(old_name,new_name)
                     landmark_start += 1
                     db[c_guid][-1]=u'有照片'
+                except:
+                    pass
+                guid=c_guid
+        elif (os.path.splitext(old_name)[1].lower()=='.3gp' or os.path.splitext(old_name)[1].lower()=='.mp4') and re.compile('[0-9a-zA-Z]{32}').search(old_name):
+            sum_place_video+=1
+            c_guid=re.compile('[0-9a-zA-Z]{32}').search(old_name).group()
+            if c_guid==guid and video_start<39:
+                try:
+                    video_name=db[c_guid][2]+str(video_start)+os.path.splitext(old_name)[1]
+                    new_name=os.path.join(os.path.split(old_name)[0],video_name)
+                    print old_name.split('\\')[-1]+u'  更名为  '+video_name
+                    os.rename(old_name,new_name)
+                    video_start += 1
+                except:
+                    pass
+            elif c_guid != guid:
+                sum_place+=1
+                try:
+                    video_start=31
+                    video_name=db[c_guid][2]+str(video_start)+os.path.splitext(old_name)[1]
+                    new_name=os.path.join(os.path.split(old_name)[0],video_name)
+                    print old_name.split('\\')[-1]+u'  更名为  '+video_name
+                    os.rename(old_name,new_name)
+                    video_start+= 1
+                    db[c_guid][-1]=u'有视频'
                 except:
                     pass
                 guid=c_guid
@@ -240,6 +271,31 @@ def change_picname(old_name,mode):
                 except:
                     pass
                 guid=c_guid
+        elif (os.path.splitext(old_name)[1].lower()=='.3gp' or os.path.splitext(old_name)[1].lower()=='.mp4') and re.compile('[0-9a-zA-Z]{32}').search(old_name):
+            sum_place_video+=1
+            c_guid=re.compile('[0-9a-zA-Z]{32}').search(old_name).group()
+            if c_guid==guid and video_start<39:
+                try:
+                    video_name=db[db[c_guid][0]][2]+str(video_start)+os.path.splitext(old_name)[1]
+                    new_name=os.path.join(os.path.split(old_name)[0],video_name)
+                    print old_name.split('\\')[-1]+u'  更名为  '+video_name
+                    os.rename(old_name,new_name)
+                    video_start += 1
+                except:
+                    pass
+            elif c_guid != guid:
+                sum_place+=1
+                try:
+                    video_start = 31
+                    video_name=db[db[c_guid][0]][2]+str(video_start)+os.path.splitext(old_name)[1]
+                    new_name=os.path.join(os.path.split(old_name)[0],video_name)
+                    print old_name.split('\\')[-1]+u'  更名为  '+video_name
+                    os.rename(old_name,new_name)
+                    video_start+= 1
+                    db[c_guid][-1]=u'有视频'
+                except:
+                    pass
+                guid=c_guid
 
 def guid_mode():
     global db
@@ -247,6 +303,7 @@ def guid_mode():
     global L_pic
     global sum_place
     global sum_place_pic
+    global sum_place_video
     global sum_landmark
     global sum_landmark_pic
     global root
@@ -254,13 +311,13 @@ def guid_mode():
     global db_path
     sum_place,sum_landmark,sum_place_pic,sum_landmark_pic=0,0,0,0
     L_pic=[]
-    pic_path = tkFileDialog.askdirectory(parent=root, initialdir="/", title='选择【 照 片 （*.JPG） 】所在文件夹')
+    pic_path = tkFileDialog.askdirectory(parent=root, initialdir="/", title='选择【多媒体文件（*.JPG|*.3GP|*.MP4）】所在路径')
     while pic_path=='':
         return 0
-    db_path=tkFileDialog.askdirectory(parent=root, initialdir="/", title='选择【Sqlite数据库(*.db)】文件所在文件夹')
+    db_path=tkFileDialog.askdirectory(parent=root, initialdir="/", title='选择【Sqlite数据库(*.db)】所在路径')
     while db_path=='':
         return 0
-    output_file = tkFileDialog.asksaveasfilename(filetypes=[('CSV file', '.csv'), ('All files', '*')], title='请选择统计结果存放位置\n注:若无漏拍照片则表格为空',defaultextension='.csv')
+    output_file = tkFileDialog.asksaveasfilename(filetypes=[('CSV file', '.csv'), ('All files', '*')], title='请选择统计结果存放位置【注】:若无漏拍照片则表格为空',defaultextension='.csv')
     if output_file=='':
         return 0
     if db_path==pic_path:
@@ -269,7 +326,7 @@ def guid_mode():
                 make_db_data(os.path.join(rootdir,files_name),'guid','照片文件夹数据库')
         for rootdir,dirs,files in os.walk(pic_path):
             for files_name in files:
-                change_picname(os.path.join(rootdir,files_name),'guid')
+                change_filename(os.path.join(rootdir,files_name),'guid')
     else:
         for rootdir,dirs,files in os.walk(pic_path):
             for files_name in files:
@@ -279,8 +336,8 @@ def guid_mode():
                 make_db_data(os.path.join(rootdir,files_name),'guid','平台数据库')
         for rootdir,dirs,files in os.walk(pic_path):
             for files_name in files:
-                change_picname(os.path.join(rootdir,files_name),'guid')
-    print u'共【 '+str(sum_place+sum_landmark)+u' 】个地名和【 '+str(sum_place_pic+sum_landmark_pic)+u' 】张照片\n地理实体：【 '+str(sum_place)+u' 】个，照片【 '+str(sum_place_pic)+u' 】张\n地名标志：【 '+str(sum_landmark)+u' 】个，照片【 '+str(sum_landmark_pic)+u' 】张'
+                change_filename(os.path.join(rootdir,files_name),'guid')
+    print u'共【 '+str(sum_place+sum_landmark)+u' 】个地名，【 '+str(sum_place_pic+sum_landmark_pic+sum_place_video)+u' 】个多媒体文件\n地理实体：【 '+str(sum_place)+u' 】个，照片【 '+str(sum_place_pic)+u' 】张，视频【 '+str(sum_place_video)+u' 】个\n地名标志：【 '+str(sum_landmark)+u' 】个，照片【 '+str(sum_landmark_pic)+u' 】张'
     output_csv()
 
 def featureid_mode():
@@ -288,22 +345,23 @@ def featureid_mode():
     global output_file
     global sum_place
     global sum_place_pic
+    global sum_place_video
     global sum_landmark
     global sum_landmark_pic
     global root
     global pic_path
     global db_path
     sum_place,sum_landmark,sum_place_pic,sum_landmark_pic=0,0,0,0
-    pic_path = tkFileDialog.askdirectory(parent=root, initialdir="/", title='选择【 照 片 （*.JPG） 】所在文件夹')
+    pic_path = tkFileDialog.askdirectory(parent=root, initialdir="/", title='选择【多媒体文件（*.JPG|*.3GP|*.MP4）】所在路径')
     if pic_path=='':
         return 0
-    db_path=tkFileDialog.askdirectory(parent=root, initialdir="/", title='选择从【运维平台】上下载的\n【Sqlite数据库(*.db)】文件所在文件夹')
+    db_path=tkFileDialog.askdirectory(parent=root, initialdir="/", title='选择从【运维平台】上下载的\n【Sqlite数据库(*.db)】所在路径')
     while pic_path in db_path:
         tkMessageBox.showinfo(title='警告', message='FeatureID模式下Sqlite数据库文件(*.db)文件\n不能放在外业照片的目录树中')
-        db_path=tkFileDialog.askdirectory(parent=root, initialdir="/", title='选择从【运维平台】上下载的\n【Sqlite数据库(*.db)】文件所在文件夹')
+        db_path=tkFileDialog.askdirectory(parent=root, initialdir="/", title='选择从【运维平台】上下载的\n【Sqlite数据库(*.db)】所在路径')
     if db_path=='':
         return 0
-    output_file = tkFileDialog.asksaveasfilename(filetypes=[('CSV file', '.prj'), ('All files', '*')], title='请选择统计结果存放位置\n注:若无漏拍照片则表格为空',defaultextension='.csv')
+    output_file = tkFileDialog.asksaveasfilename(filetypes=[('CSV file', '.prj'), ('All files', '*')], title='请选择统计结果存放位置【注】:若无漏拍照片则表格为空',defaultextension='.csv')
     if output_file=='':
         return 0
     for rootdir,dirs,files in os.walk(pic_path):
@@ -314,8 +372,8 @@ def featureid_mode():
             make_db_data(os.path.join(rootdir,files_name),'fid','平台数据库')
     for rootdir,dirs,files in os.walk(pic_path):
         for files_name in files:
-            change_picname(os.path.join(rootdir,files_name),'fid')
-    print u'共【 '+str(sum_place+sum_landmark)+u' 】个地名和【 '+str(sum_place_pic+sum_landmark_pic)+u' 】张照片\n地理实体：【 '+str(sum_place)+u' 】个，照片【 '+str(sum_place_pic)+u' 】张\n地名标志：【 '+str(sum_landmark)+u' 】个，照片【 '+str(sum_landmark_pic)+u' 】张'
+            change_filename(os.path.join(rootdir,files_name),'fid')
+    print u'共【 '+str(sum_place+sum_landmark)+u' 】个地名，【 '+str(sum_place_pic+sum_landmark_pic+sum_place_video)+u' 】个多媒体文件\n地理实体：【 '+str(sum_place)+u' 】个，照片【 '+str(sum_place_pic)+u' 】张，视频【 '+str(sum_place_video)+u' 】个\n地名标志：【 '+str(sum_landmark)+u' 】个，照片【 '+str(sum_landmark_pic)+u' 】张'
     output_csv()
 
 def main():
@@ -323,7 +381,7 @@ def main():
     global pic_path
     global db_path
     root = Tk()
-    root.title('地名普查外业照片检查预处理工具 Ver_1.0 Made by 黄竣')
+    root.title('地名普查外业照片检查预处理工具 Ver_1.01 Made by 黄竣')
     Button(root,text = u'GUID 模式\n\n( 此模式适合GUID没有发生变化时 )',command=guid_mode,width = 70,height = 4,font='微软雅黑').pack()
     Button(root, text=u'FeatureID 模式\n\n( 此模式适合GUID发生变化，改用FeatureID匹配 )', command=featureid_mode, width=70, height=4,font='微软雅黑').pack()
     root.update()

@@ -884,7 +884,7 @@ def main():
     ip=raw_input("输入IP地址：")
     dmpc = mysql.connector.connect(user='root', password='GwGcgx@2016!',host=ip, database='dmpc1', use_unicode=True)
     cursor = dmpc.cursor()
-    cursor.execute("SELECT f_id,f_idcode,f_name,f_nationalname from tb_place_info where f_region like '450108%' and f_language='壮语' and (f_nationalname='' or f_nationalname is null)")
+    cursor.execute("SELECT f_id,f_idcode,f_name,f_nationalname from tb_place_info where f_region like '450123%' and f_placetypecode in (222,2176,1343,1344,1345,1346)")
     data=cursor.fetchall()
     for f_id,f_idcode,f_name,f_nationalname in data:
         db_place[f_id]=[f_idcode,f_name,f_nationalname]
