@@ -13,7 +13,6 @@ sys.setdefaultencoding('utf-8')
 place_start=11
 landmark_start=1
 video_start=31
-sum_place_video=0
 guid=''
 pic_path=''
 db_path=''
@@ -309,7 +308,7 @@ def guid_mode():
     global root
     global pic_path
     global db_path
-    sum_place,sum_landmark,sum_place_pic,sum_landmark_pic=0,0,0,0
+    sum_place,sum_landmark,sum_place_pic,sum_landmark_pic,sum_place_video=0,0,0,0,0
     L_pic=[]
     pic_path = tkFileDialog.askdirectory(parent=root, initialdir="/", title='选择【多媒体文件（*.JPG|*.3GP|*.MP4）】所在路径')
     while pic_path=='':
@@ -351,7 +350,7 @@ def featureid_mode():
     global root
     global pic_path
     global db_path
-    sum_place,sum_landmark,sum_place_pic,sum_landmark_pic=0,0,0,0
+    sum_place,sum_landmark,sum_place_pic,sum_landmark_pic,sum_place_video=0,0,0,0,0
     pic_path = tkFileDialog.askdirectory(parent=root, initialdir="/", title='选择【多媒体文件（*.JPG|*.3GP|*.MP4）】所在路径')
     if pic_path=='':
         return 0
