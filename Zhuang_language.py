@@ -884,7 +884,8 @@ def main():
     ip=raw_input("输入IP地址：")
     dmpc = mysql.connector.connect(user='root', password='GwGcgx@2016!',host=ip, database='dmpc1', use_unicode=True)
     cursor = dmpc.cursor()
-    cursor.execute("SELECT f_id,f_idcode,f_name,f_nationalname from tb_place_info where f_region like '450123%' and f_placetypecode in (222,2176,1343,1344,1345,1346)")
+    # cursor.execute("SELECT f_id,f_idcode,f_name,f_nationalname from tb_place_info where f_region like '450102%' and f_placetypecode in (222,2176,1343,1344,1345,1346)")
+    cursor.execute("SELECT f_id,f_idcode,f_name,f_nationalname from temp_qx WHERE f_nationalname IS NULL")
     data=cursor.fetchall()
     for f_id,f_idcode,f_name,f_nationalname in data:
         db_place[f_id]=[f_idcode,f_name,f_nationalname]
@@ -900,7 +901,7 @@ def main():
                 nationalname.append(query_word(sub_word, 0))
         db_place[guid][2]="".join(nationalname)
         print '当前正在译写第【 '+str(n+1)+'/'+str(sum_place)+' 】个地名：',db_place[guid][1],db_place[guid][2]
-        cursor.execute("UPDATE tb_place_info set f_nationalname=%s where f_id=%s",(db_place[guid][2],guid))
+        cursor.execute("UPDATE temp_qx set f_nationalname=%s where f_id=%s",(db_place[guid][2],guid))
         dmpc.commit()
     cursor.close()
     dmpc.close()
