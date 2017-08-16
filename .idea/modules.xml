@@ -2,7 +2,9 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://D:\GCGX\Python\Python_Projects\GetExif\.idea\GetExif.iml" filepath="D:\GCGX\Python\Python_Projects\GetExif\.idea\GetExif.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/Python_Projects.iml" filepath="$PROJECT_DIR$/.idea/Python_Projects.iml" />
+      <module fileurl="file://$PROJECT_DIR$/pyexiftool/.idea/pyexiftool.iml" filepath="$PROJECT_DIR$/pyexiftool/.idea/pyexiftool.iml" />
     </modules>
   </component>
 </project>

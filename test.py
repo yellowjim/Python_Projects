@@ -1,7 +1,5 @@
 # -*- coding:utf-8 -*-
-import imagine
-import sys
-reload(sys)
-sys.setdefaultencoding('utf-8')
-import imaplib
-impo
+def ok(**args):
+    print args['alt']
+
+ok(alt=390.22,lat=118.22)

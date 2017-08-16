@@ -143,9 +143,9 @@ def change_filename(old_name,mode):
     global sum_landmark
     global sum_landmark_pic
     if mode=='guid':
-        if os.path.splitext(old_name)[1].lower()=='.jpg' and re.compile('[0-9a-zA-Z]{32}').search(old_name):
+        if os.path.splitext(old_name)[1].lower()=='.jpg' and re.compile('[0-9a-zA-Z-]{36}').search(old_name):
             sum_place_pic += 1
-            c_guid=re.compile('[0-9a-zA-Z]{32}').search(old_name).group()
+            c_guid=re.compile('[0-9a-zA-Z-]{36}').search(old_name).group()
             if c_guid==guid and place_start<19:
                 try:
                     pic_name=db[c_guid][2]+str(place_start)+'.jpg'
@@ -220,9 +220,9 @@ def change_filename(old_name,mode):
                     pass
                 guid=c_guid
     elif mode=='fid':
-        if os.path.splitext(old_name)[1].lower()=='.jpg' and re.compile('[0-9a-zA-Z]{32}').search(old_name):
+        if os.path.splitext(old_name)[1].lower()=='.jpg' and re.compile('[0-9a-zA-Z-]{32}').search(old_name):
             sum_place_pic+=1
-            c_guid=re.compile('[0-9a-zA-Z]{32}').search(old_name).group()
+            c_guid=re.compile('[0-9a-zA-Z-]{32}').search(old_name).group()
             if c_guid==guid and place_start<19:
                 try:
                     pic_name=db[db[c_guid][0]][2]+str(place_start)+'.jpg'
@@ -270,9 +270,9 @@ def change_filename(old_name,mode):
                 except:
                     pass
                 guid=c_guid
-        elif (os.path.splitext(old_name)[1].lower()=='.3gp' or os.path.splitext(old_name)[1].lower()=='.mp4') and re.compile('[0-9a-zA-Z]{32}').search(old_name):
+        elif (os.path.splitext(old_name)[1].lower()=='.3gp' or os.path.splitext(old_name)[1].lower()=='.mp4') and re.compile('[0-9a-zA-Z-]{32}').search(old_name):
             sum_place_video+=1
-            c_guid=re.compile('[0-9a-zA-Z]{32}').search(old_name).group()
+            c_guid=re.compile('[0-9a-zA-Z-]{32}').search(old_name).group()
             if c_guid==guid and video_start<39:
                 try:
                     video_name=db[db[c_guid][0]][2]+str(video_start)+os.path.splitext(old_name)[1]
